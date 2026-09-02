@@ -101,6 +101,12 @@ side project I'm happy to keep improving.
   source projects, not a problem.
 - **Email**: habit.tracker.ext@gmail.com
 
+## License
+
+Free to use, modify, and share — see [LICENSE](LICENSE) for the full text.
+The one restriction: nobody may sell it, or bundle it into something they
+sell, without my permission.
+
 ## Files
 
 | File | Purpose |
