@@ -7,6 +7,26 @@ somewhere but not the one you're looking at) — with charts, a per-site
 history and yearly activity heatmap, and category grouping. Nothing ever
 leaves your device: no network requests, no analytics, no accounts.
 
+## Screenshots
+
+Each shows dark mode (left) and light mode (right). The sites shown are
+sample data seeded for these screenshots — not anyone's real browsing.
+
+**Overview**
+![Overview](images/overview.png)
+
+**Analytics → By site** — day-by-day history and a yearly activity heatmap
+![Analytics by site](images/by-site.png)
+
+**Analytics → Categories** — time grouped by category, with management
+![Analytics categories](images/categories.png)
+
+**Settings**
+![Settings](images/settings.png)
+
+**Popup**
+![Popup](images/popup.png)
+
 ## About this project
 
 I'm not a programmer — this whole extension was built by an AI (Claude,
