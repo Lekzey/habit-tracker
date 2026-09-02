@@ -58,8 +58,10 @@ machine.
   your data as JSON, or clear everything.
 - Light/dark toggle in the header, independent of your OS setting.
 
+## Screenshots
+
 <details>
-<summary><strong>Screenshots</strong> (click to expand)</summary>
+<summary>Click to expand</summary>
 
 Each shows dark mode (left) and light mode (right). The sites shown are
 sample data seeded for these screenshots — not anyone's real browsing.
