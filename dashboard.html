@@ -1,0 +1,318 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>HabitTracker — Dashboard</title>
+    <script src="theme-init.js"></script>
+    <link rel="stylesheet" href="theme.css" />
+    <link rel="stylesheet" href="dashboard.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header>
+        <div class="brand">
+          <img src="icons/icon48.png" width="28" height="28" alt="" />
+          <h1>HabitTracker</h1>
+        </div>
+        <div class="header-actions">
+          <button id="themeBtn" class="icon-btn icon-only" title="Switch to dark">
+            <svg id="iconSun" viewBox="0 0 16 16" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="display: none">
+              <circle cx="8" cy="8" r="3.2" />
+              <line x1="8" y1="1.3" x2="8" y2="2.8" />
+              <line x1="8" y1="13.2" x2="8" y2="14.7" />
+              <line x1="1.3" y1="8" x2="2.8" y2="8" />
+              <line x1="13.2" y1="8" x2="14.7" y2="8" />
+              <line x1="3.3" y1="3.3" x2="4.4" y2="4.4" />
+              <line x1="11.6" y1="11.6" x2="12.7" y2="12.7" />
+              <line x1="3.3" y1="12.7" x2="4.4" y2="11.6" />
+              <line x1="11.6" y1="4.4" x2="12.7" y2="3.3" />
+            </svg>
+            <svg id="iconMoon" viewBox="0 0 16 16" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13.5 9.5A5.5 5.5 0 1 1 6.5 2.5a4.3 4.3 0 1 0 7 7z" />
+            </svg>
+          </button>
+          <button id="infoBtn" class="icon-btn icon-only" title="What does this do?">
+            <svg viewBox="0 0 16 16" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="8" cy="8" r="6.5" />
+              <line x1="8" y1="7.2" x2="8" y2="11.3" />
+              <circle cx="8" cy="4.9" r="0.15" fill="currentColor" stroke-width="1" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <dialog id="infoModal">
+        <div class="info-header">
+          <h2>What HabitTracker does</h2>
+          <button id="infoClose" class="icon-btn icon-only" title="Close">✕</button>
+        </div>
+
+        <ul class="info-list">
+          <li><strong>Tracks your time per site</strong> — split into Active (the tab you're actually looking at) and Background (open, but not the one in front).</li>
+          <li><strong>Only the site name is stored</strong> (e.g. youtube.com) — never full URLs, page content, or anything you typed.</li>
+          <li><strong>100% local</strong> — everything stays on this device. No account, no server, no network requests, ever.</li>
+        </ul>
+
+        <div class="info-header">
+          <h2>Around the app</h2>
+        </div>
+        <ul class="info-list">
+          <li><strong>Overview</strong> — totals, charts, and a full table for whatever date range you pick above.</li>
+          <li><strong>Analytics → By site</strong> — click a site to see its day-by-day history and a yearly activity calendar.</li>
+          <li><strong>Analytics → Categories</strong> — the same totals grouped into categories (News, AI, etc.) instead of by site; manage categories here too.</li>
+          <li><strong>Settings</strong> — exclude sites from tracking, back up your data, or clear everything.</li>
+          <li><strong>Refresh</strong> — saves whatever time has piled up right now instead of waiting for the next automatic save.</li>
+        </ul>
+      </dialog>
+
+      <div class="layout">
+        <aside class="sidebar">
+          <nav class="nav">
+            <button class="nav-item active" data-view="overview">Overview</button>
+            <button class="nav-item" data-view="analytics">Analytics</button>
+            <button class="nav-item" data-view="settings">Settings</button>
+          </nav>
+        </aside>
+
+        <main class="content">
+          <div class="toolbar" id="toolbar">
+            <div class="range-presets" id="rangePresets">
+              <button data-range="today" class="active">Today</button>
+              <button data-range="7d">7 days</button>
+              <button data-range="30d">30 days</button>
+              <button data-range="year">This year</button>
+              <button data-range="all">All time</button>
+            </div>
+            <div class="custom-range">
+              <input type="date" id="fromDate" />
+              <span>to</span>
+              <input type="date" id="toDate" />
+              <button id="applyCustom">Apply</button>
+              <button id="refreshBtn" class="icon-btn" title="Refresh">
+                <svg viewBox="0 0 16 16" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M13.5 8a5.5 5.5 0 1 1-1.66-3.94" />
+                  <path d="M13.5 2.5v3.5H10" />
+                </svg>
+                Refresh
+              </button>
+            </div>
+          </div>
+
+          <section id="overview" class="panel">
+            <div class="stat-row" id="statRow">
+              <div class="stat-tile">
+                <div class="stat-label">Active time</div>
+                <div class="stat-value" id="statFg">—</div>
+              </div>
+              <div class="stat-tile">
+                <div class="stat-label">Background time</div>
+                <div class="stat-value" id="statBg">—</div>
+              </div>
+              <div class="stat-tile">
+                <div class="stat-label">Sites tracked</div>
+                <div class="stat-value" id="statSites">—</div>
+              </div>
+              <div class="stat-tile">
+                <div class="stat-label">Days in range</div>
+                <div class="stat-value" id="statDays">—</div>
+              </div>
+            </div>
+
+            <div class="chart-grid">
+              <div class="card">
+                <div class="card-title">Time by site</div>
+                <canvas id="pie" height="260"></canvas>
+              </div>
+              <div class="card">
+                <div class="card-title">Active vs. background (top sites)</div>
+                <div class="legend-row">
+                  <span class="swatch swatch-fg"></span> Active
+                  <span class="swatch swatch-bg"></span> Background
+                </div>
+                <canvas id="bar" height="260"></canvas>
+              </div>
+            </div>
+
+            <details class="card" open>
+              <summary class="card-title">All sites in range</summary>
+              <table id="table">
+                <thead>
+                  <tr>
+                    <th data-sort="label">Site</th>
+                    <th data-sort="fg">Active</th>
+                    <th data-sort="bg">Background</th>
+                    <th data-sort="total">Total</th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+              </table>
+            </details>
+          </section>
+
+          <section id="analytics" class="panel" hidden>
+            <div class="subtabs">
+              <button class="subtab active" data-subview="bysite">By site</button>
+              <button class="subtab" data-subview="categories">Categories</button>
+            </div>
+
+            <div id="analyticsBySite" class="subpanel">
+              <div class="analytics-layout">
+                <div class="analytics-site-list">
+                  <div class="sidebar-section-title">Sites</div>
+                  <div id="siteList" class="site-list"></div>
+                </div>
+
+                <div class="analytics-detail" id="analyticsDetail">
+                  <div id="siteDetailEmpty" class="site-list-empty">Pick a site from the list to see its history.</div>
+
+                  <div id="siteDetailContent" hidden>
+                    <div class="site-detail-header">
+                      <h2 id="siteDetailTitle">—</h2>
+                      <a id="siteDetailLink" href="#" target="_blank" rel="noopener noreferrer" class="visit-link">
+                        Visit site ↗
+                      </a>
+                    </div>
+
+                    <div class="stat-row">
+                      <div class="stat-tile">
+                        <div class="stat-label">Active time</div>
+                        <div class="stat-value" id="siteStatFg">—</div>
+                      </div>
+                      <div class="stat-tile">
+                        <div class="stat-label">Background time</div>
+                        <div class="stat-value" id="siteStatBg">—</div>
+                      </div>
+                      <div class="stat-tile">
+                        <div class="stat-label">Days used</div>
+                        <div class="stat-value" id="siteStatDays">—</div>
+                      </div>
+                      <div class="stat-tile">
+                        <div class="stat-label">Last used</div>
+                        <div class="stat-value" id="siteStatLast">—</div>
+                      </div>
+                    </div>
+
+                    <div class="card">
+                      <div class="card-title-row">
+                        <div class="card-title">Daily activity</div>
+                        <div class="heatmap-nav">
+                          <button id="heatmapPrevYear" class="icon-btn icon-only" title="Previous year">‹</button>
+                          <span id="heatmapYearLabel">—</span>
+                          <button id="heatmapNextYear" class="icon-btn icon-only" title="Next year">›</button>
+                        </div>
+                      </div>
+                      <div id="heatmap" class="heatmap"></div>
+                      <div class="heatmap-legend">
+                        <span>Less</span>
+                        <span class="heat-swatch" data-level="0"></span>
+                        <span class="heat-swatch" data-level="1"></span>
+                        <span class="heat-swatch" data-level="2"></span>
+                        <span class="heat-swatch" data-level="3"></span>
+                        <span class="heat-swatch" data-level="4"></span>
+                        <span>More</span>
+                      </div>
+                    </div>
+
+                    <div class="card">
+                      <div class="card-title">When you used it</div>
+                      <p class="muted">Every day this site was open in the selected range, most recent first.</p>
+                      <table id="siteDayTable">
+                        <thead>
+                          <tr>
+                            <th>Date</th>
+                            <th>Active</th>
+                            <th>Background</th>
+                            <th>Total</th>
+                          </tr>
+                        </thead>
+                        <tbody id="siteDayTableBody"></tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="analyticsCategories" class="subpanel" hidden>
+              <div class="chart-grid">
+                <div class="card">
+                  <div class="card-title">Time by category</div>
+                  <canvas id="categoryPie" height="260"></canvas>
+                </div>
+                <div class="card">
+                  <div class="card-title">Active vs. background (top categories)</div>
+                  <div class="legend-row">
+                    <span class="swatch swatch-fg"></span> Active
+                    <span class="swatch swatch-bg"></span> Background
+                  </div>
+                  <canvas id="categoryBar" height="260"></canvas>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-title">Manage categories</div>
+                <p class="muted">Add, rename, or remove categories. Deleting one moves its sites back to Uncategorized.</p>
+                <div class="row">
+                  <input type="text" id="categoryInput" placeholder="New category name" />
+                  <button id="addCategory">Add</button>
+                </div>
+                <ul id="categoryManageList" class="exclude-list"></ul>
+              </div>
+
+              <div class="card">
+                <div class="card-title">Assign sites</div>
+                <p class="muted">
+                  Sites you haven't assigned use the built-in guess where one exists, otherwise
+                  Uncategorized.
+                </p>
+                <table id="assignTable">
+                  <thead>
+                    <tr>
+                      <th>Site</th>
+                      <th>Category</th>
+                    </tr>
+                  </thead>
+                  <tbody id="assignTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section id="settings" class="panel" hidden>
+            <div class="card">
+              <div class="card-title">Excluded sites</div>
+              <p class="muted">
+                Sites on this list, and any of their subdomains (e.g. excluding "example.com" also
+                excludes "mail.example.com"), are never tracked — no time, no domain name, is ever
+                recorded for them.
+              </p>
+              <div class="row">
+                <input type="text" id="excludeInput" placeholder="example.com" />
+                <button id="addExclude">Add</button>
+              </div>
+              <ul id="excludeList" class="exclude-list"></ul>
+            </div>
+
+            <div class="card">
+              <div class="card-title">Your data</div>
+              <p class="muted">Everything stays on this device. Nothing is ever sent to a server.</p>
+              <div class="row">
+                <button id="exportBtn">Export as JSON</button>
+                <label class="file-btn">
+                  Import JSON
+                  <input type="file" id="importInput" accept="application/json" hidden />
+                </label>
+                <button id="clearBtn" class="danger">Clear all data</button>
+              </div>
+              <div id="settingsMsg" class="muted"></div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="common.js"></script>
+    <script src="charts.js"></script>
+    <script src="dashboard.js"></script>
+  </body>
+</html>
